@@ -1,0 +1,71 @@
+// Physics.h
+// Physics system for the lunar lander simulation
+
+#pragma once
+
+#include "Entity.h"
+#include "Terrain.h"
+#include <vector>
+
+class Physics {
+public:
+    Physics();
+    ~Physics() = default;
+    
+    // Core physics methods
+    void Initialize();
+    void Update(float deltaTime);
+    
+    // Register entities with the physics system
+    void RegisterLander(Lander* lander);
+    void RegisterTerrain(Terrain* terrain);
+    
+    // Physics constants getters/setters
+    float GetGravity() const { return mGravity; }
+    void SetGravity(float gravity) { mGravity = gravity; }
+    
+    float GetAirDensity() const { return mAirDensity; }
+    void SetAirDensity(float density) { mAirDensity = density; }
+    
+    float GetPixelsPerMeter() const { return mPixelsPerMeter; }
+    void SetPixelsPerMeter(float ppm) { mPixelsPerMeter = ppm; }
+    
+    // Collision detection
+    bool CheckCollisions();
+    
+    // Physics calculations
+    void ApplyGravity(Lander* lander, float deltaTime);
+    void ApplyThrust(Lander* lander, float deltaTime);
+    void ApplyDrag(Lander* lander, float deltaTime);
+    
+    // 2D physics (from Phase 2)
+    void Update2D(float deltaTime);
+    bool CheckCollisions2D();
+    
+    // 3D physics (for Phase 3)
+    void Update3D(float deltaTime);
+    bool CheckCollisions3D();
+
+private:
+    // Physics constants
+    float mGravity;         // Lunar gravity (m/s²)
+    float mAirDensity;      // Atmospheric density (kg/m³)
+    float mTimeScale;       // Time scaling factor for simulation speed
+    float mPixelsPerMeter;  // Conversion factor between physics and screen units
+    
+    // Simulation mode
+    bool m3DMode;           // Whether to use 3D physics
+    
+    // Physics entities
+    Lander* mLander;
+    Terrain* mTerrain;
+    
+    // Integration method
+    enum IntegrationMethod {
+        EULER,
+        VERLET,
+        RK4
+    };
+    
+    IntegrationMethod mIntegrationMethod;
+};
